@@ -104,12 +104,16 @@ NSOperationQueue *taskQueue;
 
 // constructor
 - (id)init {
-    self = [super init];
-    if(taskQueue == nil) {
-        taskQueue = [[NSOperationQueue alloc] init];
-        taskQueue.maxConcurrentOperationCount = 10;
-    }
-    return self;
+   self = [super init];
+   if(taskQueue == nil) {
+       @synchronized ([RNFetchBlobNetwork class]) {
+           if (taskQueue == nil) {
+               taskQueue = [[NSOperationQueue alloc] init];
+               taskQueue.maxConcurrentOperationCount = 10;
+           }
+       }
+   }
+   return self;
 }
 
 + (void) enableProgressReport:(NSString *) taskId config:(RNFetchBlobProgress *)config
@@ -241,7 +245,9 @@ NSOperationQueue *taskQueue;
     }
 
     __block NSURLSessionDataTask * task = [session dataTaskWithRequest:req];
-    [taskTable setObject:task forKey:taskId];
+    @synchronized(taskTable) {
+       [taskTable setObject:task forKey:taskId];
+    }
     [task resume];
 
     // network status indicator
