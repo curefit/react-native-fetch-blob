@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "react-native-fetch-blob"
-  s.version          = "0.10.81"
+  s.version          = "0.10.82"
   s.summary          = "A project committed to make file acess and data transfer easier, effiecient for React Native developers."
   s.requires_arc = true
   s.license      = 'MIT'
